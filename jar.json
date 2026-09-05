@@ -1,18 +1,40 @@
 {
-  "paying_monthly": 0,
+  "paying_monthly": 7,
   "trial": 2,
   "lifetime": 21,
   "free": 12,
   "total_members": 37,
   "email_subscribers": 4133,
-  "mrr": 0,
+  "mrr": 203,
   "one_time_revenue": 609,
   "pushed_at": "2026-09-06T01:40:00+03:00",
-  "pushed_by": "Adam, first fill",
+  "pushed_by": "Adam, live-push test, not a real number",
   "placeholders": [],
   "sources": [
-    {"name": "Skool admin Members page, Active tab, read in Sharon's Chrome", "read_at": "2026-09-06 01:35 IDT", "fields": ["paying_monthly", "trial", "lifetime", "free", "total_members", "mrr", "one_time_revenue"], "status": "read", "note": "35 active members plus 2 admins. 21 lifetime buyers at $29 once. 12 free invited members. 2 in trial: one $29/month trial already cancelled and leaving in 4 days, one $280/year trial ending in 1 day. Nobody is yet on the $29/month plan past trial"},
-    {"name": "MailerLite through Composio, active subscribers counted across the full list", "read_at": "2026-09-06 01:35 IDT", "fields": ["email_subscribers"], "status": "read", "note": "4,133 active. 258 unconfirmed and 341 unsubscribed are not counted"}
+    {
+      "name": "Skool admin Members page, Active tab, read in Sharon's Chrome",
+      "read_at": "2026-09-06 01:35 IDT",
+      "fields": [
+        "paying_monthly",
+        "trial",
+        "lifetime",
+        "free",
+        "total_members",
+        "mrr",
+        "one_time_revenue"
+      ],
+      "status": "read",
+      "note": "35 active members plus 2 admins. 21 lifetime buyers at $29 once. 12 free invited members. 2 in trial: one $29/month trial already cancelled and leaving in 4 days, one $280/year trial ending in 1 day. Nobody is yet on the $29/month plan past trial"
+    },
+    {
+      "name": "MailerLite through Composio, active subscribers counted across the full list",
+      "read_at": "2026-09-06 01:35 IDT",
+      "fields": [
+        "email_subscribers"
+      ],
+      "status": "read",
+      "note": "4,133 active. 258 unconfirmed and 341 unsubscribed are not counted"
+    }
   ],
   "notes": "One-time revenue is 21 lifetime buyers at $29 as shown on their member rows, not a payout figure."
 }
