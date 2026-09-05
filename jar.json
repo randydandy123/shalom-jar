@@ -1,14 +1,14 @@
 {
-  "paying_monthly": 7,
+  "paying_monthly": 0,
   "trial": 2,
   "lifetime": 21,
   "free": 12,
   "total_members": 37,
   "email_subscribers": 4133,
-  "mrr": 203,
+  "mrr": 0,
   "one_time_revenue": 609,
   "pushed_at": "2026-09-06T01:40:00+03:00",
-  "pushed_by": "Adam, live-push test, not a real number",
+  "pushed_by": "Adam, first fill",
   "placeholders": [],
   "sources": [
     {
