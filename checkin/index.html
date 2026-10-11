@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Ferment Check-in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  /* Fermentulator look: tape and steel. Status colours are never used here. */
+  :root {
+    --paper: #FAFAF7; --ink: #111111; --ink-2: #4b4d4f; --steel: #C9CCCE;
+    --tape: #4A8CC2; --tape-text: #06192A; --brine: #D6E6F3; --card: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #121212; --ink: #F2F2EE; --ink-2: #b4b6b2; --steel: #3a3d3f;
+      --tape: #6FA8D6; --tape-text: #06192A; --brine: #1d2a35; --card: #1a1a1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #121212; --ink: #F2F2EE; --ink-2: #b4b6b2; --steel: #3a3d3f;
+    --tape: #6FA8D6; --tape-text: #06192A; --brine: #1d2a35; --card: #1a1a1a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 "DM Sans", Arial, sans-serif; }
+  .wrap { max-width: 620px; margin: 0 auto; padding: 20px 16px 120px; }
+  h1 { font: 40px/1 Anton, Impact, sans-serif; text-transform: uppercase; margin: 6px 0 4px; letter-spacing: .5px; }
+  h2 { font: 22px/1.1 Anton, Impact, sans-serif; text-transform: uppercase; margin: 0 0 4px; letter-spacing: .4px; }
+  .tape { display: inline-block; background: var(--tape); color: var(--tape-text); font: 600 22px/1.2 Caveat, cursive; padding: 2px 12px; transform: rotate(-1.5deg); }
+  .mono { font-family: "Space Mono", monospace; }
+  .sub { color: var(--ink-2); margin: 8px 0 0; }
+
+  .jars { display: flex; gap: 8px; margin: 22px 0 12px; flex-wrap: wrap; }
+  .jars button { flex: 1 1 140px; border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); border-radius: 10px; padding: 10px 12px; text-align: left; font: inherit; cursor: pointer; }
+  .jars button b { display: block; font: 18px/1.1 Anton, sans-serif; text-transform: uppercase; }
+  .jars button span { font: 12px "Space Mono", monospace; color: var(--ink-2); }
+  .jars button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .jars button[aria-pressed="true"] span { color: var(--steel); }
+
+  .daybar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--brine); border-radius: 12px; padding: 12px 14px; margin-bottom: 18px; }
+  .daybar .big { font: 34px/1 Anton, sans-serif; text-transform: uppercase; }
+  .daybar button { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); font-size: 20px; cursor: pointer; }
+  .daybar .meta { font: 12px "Space Mono", monospace; color: var(--ink-2); width: 100%; }
+  .daybar input { font: 12px "Space Mono", monospace; border: 1px solid var(--steel); background: var(--card); color: var(--ink); border-radius: 6px; padding: 2px 6px; }
+  .other { display: none; gap: 8px; margin: -4px 0 14px; }
+  .other.on { display: flex; }
+  .other input { flex: 1; font: inherit; padding: 8px 10px; border: 1.5px solid var(--steel); border-radius: 8px; background: var(--card); color: var(--ink); }
+
+  section { background: var(--card); border: 1px solid var(--steel); border-radius: 14px; padding: 16px; margin: 14px 0; }
+  section .why { color: var(--ink-2); font-size: 14px; margin: 0 0 10px; }
+  .n { font: 700 12px "Space Mono", monospace; color: var(--tape); margin-right: 4px; }
+
+  label.check { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-top: 1px dashed var(--steel); cursor: pointer; }
+  label.check:first-of-type { border-top: 0; }
+  label.check input { appearance: none; flex: 0 0 26px; height: 26px; border: 2px solid var(--ink); border-radius: 6px; margin: 0; background: var(--card); cursor: pointer; display: grid; place-content: center; }
+  label.check input:checked { background: var(--ink); }
+  label.check input:checked::after { content: ""; width: 7px; height: 13px; border: solid var(--paper); border-width: 0 3px 3px 0; transform: rotate(45deg) translate(-1px,-2px); }
+  label.check input:checked + div .t { text-decoration: line-through; color: var(--ink-2); }
+  .t { font-weight: 500; }
+  .d { display: block; font-size: 14px; color: var(--ink-2); }
+  .hint { display: block; font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+  .hint b { color: var(--ink); font-weight: 500; }
+
+  .say { border-top: 1px dashed var(--steel); padding: 12px 0 4px; }
+  .say:first-of-type { border-top: 0; }
+  .say .row { display: flex; gap: 12px; align-items: flex-start; }
+  .say .line { font: 600 21px/1.2 Caveat, cursive; color: var(--ink); margin: 2px 0 6px; }
+  textarea { width: 100%; min-height: 54px; resize: vertical; font: 15px/1.4 "DM Sans", sans-serif; padding: 8px 10px; border: 1.5px solid var(--steel); border-radius: 8px; background: var(--paper); color: var(--ink); }
+  textarea:focus, .other input:focus { outline: 2px solid var(--tape); border-color: var(--tape); }
+
+  .rules { list-style: none; padding: 0; margin: 0; }
+  .rules li { padding: 6px 0 6px 22px; position: relative; font-size: 15px; }
+  .rules li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 10px; height: 4px; background: var(--tape); }
+
+  .progress { height: 6px; background: var(--steel); border-radius: 3px; overflow: hidden; margin-top: 10px; }
+  .progress i { display: block; height: 100%; background: var(--tape); width: 0; transition: width .2s; }
+
+  .send { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper); border-top: 1px solid var(--steel); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); }
+  .send .in { max-width: 620px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
+  .send .count { font: 12px "Space Mono", monospace; color: var(--ink-2); flex: 1; }
+  .send button { border: 0; background: var(--ink); color: var(--paper); font: 700 16px "DM Sans", sans-serif; padding: 13px 18px; border-radius: 10px; cursor: pointer; }
+
+  .log { font: 13px "Space Mono", monospace; color: var(--ink-2); }
+  .log div { padding: 4px 0; border-top: 1px dashed var(--steel); }
+  .log div:first-child { border-top: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="tape">one jar, every day, same frame</span>
+  <h1>Ferment check-in</h1>
+  <p class="sub">Pick the jar, check the day, then tick each shot as you film it. Your notes stay on this phone. When you're done, press <b>Send to Sharon</b>.</p>
+
+  <div class="jars" id="jars"></div>
+  <div class="other" id="other">
+    <input id="otherName" placeholder="Which ferment? e.g. Shio koji">
+    <input id="otherStart" type="date" aria-label="Day 1 date" style="flex:0 0 150px">
+  </div>
+
+  <div class="daybar">
+    <button id="dayDown" aria-label="Previous day">&minus;</button>
+    <div class="big" id="dayLabel">Day 1</div>
+    <button id="dayUp" aria-label="Next day">+</button>
+    <div class="meta" id="dayMeta"></div>
+  </div>
+
+  <section>
+    <h2>Before you press record</h2>
+    <p class="why">Same frame every time. Cut together, the jar changes and nothing else does. That is the whole series.</p>
+    <div id="setup"></div>
+  </section>
+
+  <section>
+    <h2>The shots</h2>
+    <p class="why">Vertical, 9:16. Every clip keeps its own sound. Start each shot before the movement starts, stop after it ends.</p>
+    <div id="shots"></div>
+  </section>
+
+  <section>
+    <h2>The selfie talk</h2>
+    <p class="why">Phone in your hand, face to camera, jar in the shot. 30 to 60 seconds, English. Jot a word or two in each box first if it helps, then talk it through. Two takes.</p>
+    <div id="talk"></div>
+  </section>
+
+  <section>
+    <h2>Always</h2>
+    <ul class="rules">
+      <li>Open with the day number. That is the hook.</li>
+      <li>Every episode stands alone. Never say "yesterday" or "last episode", someone is meeting this jar for the first time.</li>
+      <li>Something looks wrong? Film it before you fix it. The scary days are the best episodes.</li>
+      <li>Show it, then say it: if you talk about bubbles, the camera is already on the bubbles.</li>
+      <li>Delicious first. No gut health or probiotics on camera.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Done</h2>
+    <div id="done"></div>
+    <div class="progress"><i id="bar"></i></div>
+  </section>
+
+  <section>
+    <h2>Sent so far</h2>
+    <div class="log" id="log"></div>
+  </section>
+</div>
+
+<div class="send"><div class="in">
+  <div class="count" id="count"></div>
+  <button id="sendBtn">Send to Sharon</button>
+</div></div>
+
+<script>
+const JARS = [
+  { id: "starter", name: "Sourdough race", say: "my sourdough starter race", note: "daily · day 1 to 7", start: "2026-10-08", unit: "day",
+    see: "Which jar is higher against its rubber band, Apple or Water? Bubbles on the side, the smell, the top." },
+  { id: "miso", name: "Bread miso", say: "my bread miso", note: "weekly check-in", start: "2026-10-08", unit: "week",
+    see: "The surface under the lid, the colour, any liquid on top, any spots. Is it something to worry about or not?" },
+  { id: "other", name: "Other jar", note: "name it below", start: "", unit: "day", see: "" }
+];
+
+const SETUP = [
+  ["Jar on its tape mark", "Same spot on the counter as day 1."],
+  ["Phone on its tape mark", "Same tripod spot, same height, same angle."],
+  ["Same window light", "About the same time of day as day 1. Big light off if it wasn't on."],
+  ["Label updated", "New day number and the date on the tape, in Sharpie."],
+  ["Phone ready", "Lens wiped, vertical, do not disturb on, room quiet."]
+];
+
+const SHOTS = [
+  ["The jar, untouched", "10 seconds in the locked frame, nobody touching it. The before.", ""],
+  ["Close-up: what you see", "Get in close and hold 5 seconds on the thing you're going to talk about.", "see"],
+  ["The action, start to end", "Open the lid, smell, stir, feed, discard, press down, burp. With its sound.", ""],
+  ["The number", "Anything measurable on camera: the scale, the thermometer, the band. Skip if there is none today.", ""],
+  ["Lid back on", "The jar back on its mark in the locked frame. The after.", ""],
+  ["The selfie talk", "Below. Two takes.", ""]
+];
+
+const TALK = [
+  ["intro", "\"This is day {day} of {jar}.\"", "Say it first, every time.", false],
+  ["see", "What I see", "Describe it like the viewer can't see the screen.", true],
+  ["wrong", "What can go wrong right now", "What would make you worry at this stage, and what it would look like.", true],
+  ["notice", "What I'm watching for", "Smell, sound, texture, speed. The thing only someone with experience notices.", true],
+  ["action", "What I'm doing today, and why", "The one action, in one sentence.", true],
+  ["next", "What's next", "When you check it again, and what should have changed by then.", true],
+  ["follow", "\"Follow so you can see how this jar turns out.\"", "Or your own words. Don't promise a date you might miss.", false],
+  ["app", "\"Want to start your own jar? My app, the Fermentulator, is free. Link in bio.\"", "Optional. Say it when today's jar shows why tracking a jar helps.", false]
+];
+
+const DONE = [
+  ["Watched the takes back once", "Sound clear, jar in focus, face in the light."],
+  ["Clips sent to Sharon", "All the clips from today, the way you always send footage."]
+];
+
+const KEY = "ferment-checkin-v1";
+let store = {};
+try { store = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { store = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) {} };
+
+store.jar = store.jar || "starter";
+store.other = store.other || { name: "", start: "" };
+store.entries = store.entries || {};
+store.sent = store.sent || [];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function jar() {
+  const j = { ...JARS.find(x => x.id === store.jar) };
+  if (j.id === "other") { j.name = store.other.name || "your jar"; j.say = j.name; j.start = store.other.start; }
+  return j;
+}
+function dayFromStart(start) {
+  if (!start) return 1;
+  const s = new Date(start + "T00:00:00"), t = new Date(); t.setHours(0, 0, 0, 0);
+  return Math.max(1, Math.round((t - s) / 864e5) + 1);
+}
+function currentDay() {
+  const j = jar(), k = "day_" + j.id;
+  return store[k] || dayFromStart(j.start);
+}
+function entryKey() { return jar().id + "|" + currentDay(); }
+function entry() { return store.entries[entryKey()] || (store.entries[entryKey()] = { checks: {}, notes: {} }); }
+
+function checkRow(id, title, desc, hint) {
+  const e = entry(), on = e.checks[id] ? "checked" : "";
+  return `<label class="check"><input type="checkbox" data-c="${id}" ${on}><div><span class="t">${esc(title)}</span><span class="d">${esc(desc)}</span>${hint ? `<span class="hint"><b>Today, look for:</b> ${esc(hint)}</span>` : ""}</div></label>`;
+}
+
+function render() {
+  const j = jar(), day = currentDay(), e = entry();
+  $("jars").innerHTML = JARS.map(x => `<button aria-pressed="${x.id === store.jar}" data-j="${x.id}"><b>${esc(x.name)}</b><span>${esc(x.note)}</span></button>`).join("");
+  $("other").classList.toggle("on", j.id === "other");
+  $("otherName").value = store.other.name; $("otherStart").value = store.other.start;
+
+  $("dayLabel").textContent = "Day " + day;
+  const week = j.unit === "week" ? ` · week ${Math.floor((day - 1) / 7) + 1}` : "";
+  $("dayMeta").innerHTML = (j.start ? `Day 1 was ${esc(j.start)}${week}. ` : "Set the Day 1 date above. ") + "Wrong number? Use the − and +.";
+
+  $("setup").innerHTML = SETUP.map((s, i) => checkRow("s" + i, s[0], s[1])).join("");
+  $("shots").innerHTML = SHOTS.map((s, i) => checkRow("h" + i, s[0], s[1], s[2] === "see" ? j.see : "")).join("");
+  $("talk").innerHTML = TALK.map(([id, line, desc, box]) => {
+    const said = e.checks["t_" + id] ? "checked" : "";
+    const txt = line.replace("{day}", day).replace("{jar}", j.say);
+    return `<div class="say"><label class="check" style="border:0;padding:0"><input type="checkbox" data-c="t_${id}" ${said}><div><div class="line">${esc(txt)}</div><span class="d">${esc(desc)}</span></div></label>${box ? `<textarea data-n="${id}" placeholder="A few words...">${esc(e.notes[id] || "")}</textarea>` : ""}</div>`;
+  }).join("");
+  $("done").innerHTML = DONE.map((s, i) => checkRow("d" + i, s[0], s[1])).join("");
+
+  const sent = store.sent.filter(s => s.jar === j.id);
+  $("log").innerHTML = sent.length ? sent.slice().reverse().map(s => `<div>Day ${s.day} · sent ${esc(s.at)}</div>`).join("") : "<div>Nothing sent yet for this jar.</div>";
+  progress();
+}
+
+function progress() {
+  const total = SETUP.length + SHOTS.length + TALK.length + DONE.length;
+  const done = Object.values(entry().checks).filter(Boolean).length;
+  $("bar").style.width = Math.round(done / total * 100) + "%";
+  $("count").textContent = `${done} of ${total} ticked · Day ${currentDay()}`;
+}
+
+document.addEventListener("click", ev => {
+  const b = ev.target.closest("[data-j]");
+  if (b) { store.jar = b.dataset.j; save(); render(); }
+});
+document.addEventListener("change", ev => {
+  const c = ev.target.dataset.c;
+  if (c) { entry().checks[c] = ev.target.checked; save(); progress(); }
+});
+document.addEventListener("input", ev => {
+  const n = ev.target.dataset.n;
+  if (n) { entry().notes[n] = ev.target.value; save(); }
+});
+$("otherName").addEventListener("change", ev => { store.other.name = ev.target.value.trim(); save(); render(); });
+$("otherStart").addEventListener("change", ev => { store.other.start = ev.target.value; delete store["day_other"]; save(); render(); });
+$("dayDown").onclick = () => { store["day_" + jar().id] = Math.max(1, currentDay() - 1); save(); render(); };
+$("dayUp").onclick = () => { store["day_" + jar().id] = currentDay() + 1; save(); render(); };
+
+$("sendBtn").onclick = () => {
+  const j = jar(), day = currentDay(), e = entry();
+  const tick = (id, t) => (e.checks[id] ? "✓ " : "✗ ") + t;
+  const lines = [`Day ${day} of ${j.name}`, ""];
+  lines.push("Shots:", ...SHOTS.map((s, i) => tick("h" + i, s[0])), "");
+  lines.push("Talk:");
+  TALK.forEach(([id, line, , box]) => {
+    const label = box ? line : line.replace("{day}", day).replace("{jar}", j.say);
+    lines.push(tick("t_" + id, label));
+    if (box && e.notes[id]) lines.push("   " + e.notes[id].trim());
+  });
+  lines.push("", tick("d1", "Clips sent"));
+  window.open("https://wa.me/?text=" + encodeURIComponent(lines.join("\n")), "_blank");
+  store.sent.push({ jar: j.id, day, at: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" }) });
+  save(); render();
+};
+
+render();
+</script>
+</body>
+</html>
