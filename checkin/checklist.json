@@ -1,0 +1,167 @@
+{
+  "sections": [
+    {
+      "id": "setup",
+      "kind": "check",
+      "title": "Before you press record",
+      "why": "Same frame every time. Cut together, the jar changes and nothing else does. That is the whole series.",
+      "lines": [
+        {
+          "id": "s1",
+          "t": "Phone on the tripod",
+          "d": "Same tripod spot, same height, same angle."
+        },
+        {
+          "id": "s2",
+          "t": "window light",
+          "d": ""
+        },
+        {
+          "id": "s3",
+          "t": "put on your mic",
+          "d": ""
+        },
+        {
+          "id": "s4",
+          "t": "Phone ready",
+          "d": "Lens wiped, vertical, do not disturb on, room quiet."
+        }
+      ]
+    },
+    {
+      "id": "shots",
+      "kind": "check",
+      "title": "The shots",
+      "why": "Vertical, 9:16. Every clip keeps its own sound. Start each shot before the movement starts, stop after it ends.",
+      "lines": [
+        {
+          "id": "h0",
+          "t": "The jar, untouched",
+          "d": "10 seconds in the locked frame, nobody touching it. The before."
+        },
+        {
+          "id": "h1",
+          "t": "Close-up: what you see",
+          "d": "Get in close and hold 5 seconds on the thing you're going to talk about.",
+          "hint": true
+        },
+        {
+          "id": "h2",
+          "t": "The action, start to end",
+          "d": "Open the lid, smell, stir, feed, discard, press down, burp. With its sound."
+        },
+        {
+          "id": "h3",
+          "t": "The number",
+          "d": "Anything measurable on camera: the scale, the thermometer, the band. Skip if there is none today."
+        },
+        {
+          "id": "h4",
+          "t": "Lid back on",
+          "d": "The jar back on its mark in the locked frame. The after."
+        },
+        {
+          "id": "h5",
+          "t": "The selfie talk",
+          "d": "Below. Two takes."
+        }
+      ]
+    },
+    {
+      "id": "talk",
+      "kind": "talk",
+      "title": "The selfie talk",
+      "why": "Phone in your hand, face to camera, jar in the shot. 30 to 60 seconds, English. Jot a word or two in each box first if it helps, then talk it through. Two takes.",
+      "lines": [
+        {
+          "id": "t_intro",
+          "t": "\"This is day {day} of {jar}.\"",
+          "d": "Say it first, every time.",
+          "box": true
+        },
+        {
+          "id": "t_see",
+          "t": "What I see",
+          "d": "Describe it like the viewer can't see the screen.",
+          "box": true
+        },
+        {
+          "id": "t_wrong",
+          "t": "What can go wrong right now",
+          "d": "What would make you worry at this stage, and what it would look like.",
+          "box": true
+        },
+        {
+          "id": "t_notice",
+          "t": "What I'm watching for",
+          "d": "Smell, sound, texture, speed. The thing only someone with experience notices.",
+          "box": true
+        },
+        {
+          "id": "t_action",
+          "t": "What I'm doing today, and why",
+          "d": "The one action, in one sentence.",
+          "box": true
+        },
+        {
+          "id": "t_next",
+          "t": "What's next",
+          "d": "When you check it again, and what should have changed by then.",
+          "box": true
+        },
+        {
+          "id": "t_follow",
+          "t": "\"Follow so you can see how this jar turns out.\"",
+          "d": "Or your own words. Don't promise a date you might miss.",
+          "box": false
+        }
+      ]
+    },
+    {
+      "id": "rules",
+      "kind": "rules",
+      "title": "Always",
+      "why": "",
+      "lines": [
+        {
+          "id": "r0",
+          "t": "Open with the day number. That is the hook."
+        },
+        {
+          "id": "r1",
+          "t": "Every episode stands alone. Never say \"yesterday\" or \"last episode\", someone is meeting this jar for the first time."
+        },
+        {
+          "id": "r2",
+          "t": "Something looks wrong? Film it before you fix it. The scary days are the best episodes."
+        },
+        {
+          "id": "r3",
+          "t": "Show it, then say it: if you talk about bubbles, the camera is already on the bubbles."
+        },
+        {
+          "id": "r4",
+          "t": "Delicious first. No gut health or probiotics on camera."
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "kind": "check",
+      "title": "Done",
+      "why": "",
+      "lines": [
+        {
+          "id": "d0",
+          "t": "Watched the takes back once",
+          "d": "Sound clear, jar in focus, face in the light."
+        },
+        {
+          "id": "d1",
+          "t": "Clips sent to Sharon",
+          "d": "All the clips from today, the way you always send footage."
+        }
+      ]
+    }
+  ]
+}

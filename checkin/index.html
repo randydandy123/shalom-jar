@@ -85,10 +85,26 @@
   .log { font: 13px "Space Mono", monospace; color: var(--ink-2); }
   .log div { padding: 4px 0; border-top: 1px dashed var(--steel); }
   .log div:first-child { border-top: 0; }
+
+  .editbtn { display: none; border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); font: 700 14px "DM Sans", sans-serif; padding: 8px 14px; border-radius: 10px; cursor: pointer; float: right; }
+  .local .editbtn { display: inline-block; }
+  .ed { border-top: 1px dashed var(--steel); padding: 10px 0; display: grid; grid-template-columns: 1fr auto; gap: 6px 8px; }
+  .ed:first-of-type { border-top: 0; }
+  .ed input[type=text], .ed textarea, .edhead input, .edhead textarea { width: 100%; font: 15px/1.4 "DM Sans", sans-serif; padding: 7px 9px; border: 1.5px solid var(--steel); border-radius: 8px; background: var(--paper); color: var(--ink); }
+  .ed .t-in { font-weight: 700; }
+  .edhead input { font: 20px Anton, sans-serif; text-transform: uppercase; margin-bottom: 6px; }
+  .edhead textarea { min-height: 44px; margin-bottom: 8px; }
+  .tools { display: flex; flex-direction: column; gap: 4px; grid-row: span 3; }
+  .tools button, .add { border: 1px solid var(--steel); background: var(--card); color: var(--ink); border-radius: 8px; width: 34px; height: 30px; cursor: pointer; font-size: 15px; }
+  .tools .del { color: #b33; }
+  .add { width: auto; padding: 0 14px; height: 38px; margin-top: 8px; font: 600 14px "DM Sans", sans-serif; }
+  .boxopt { font-size: 13px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; }
+  .saved { font: 12px "Space Mono", monospace; color: var(--ink-2); }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <button class="editbtn" id="editBtn">Edit lines</button>
   <span class="tape">one jar, every day, same frame</span>
   <h1>Ferment check-in</h1>
   <p class="sub">Pick the jar, check the day, then tick each shot as you film it. Your notes stay on this phone. When you're done, press <b>Send to Sharon</b>.</p>
@@ -106,40 +122,8 @@
     <div class="meta" id="dayMeta"></div>
   </div>
 
-  <section>
-    <h2>Before you press record</h2>
-    <p class="why">Same frame every time. Cut together, the jar changes and nothing else does. That is the whole series.</p>
-    <div id="setup"></div>
-  </section>
-
-  <section>
-    <h2>The shots</h2>
-    <p class="why">Vertical, 9:16. Every clip keeps its own sound. Start each shot before the movement starts, stop after it ends.</p>
-    <div id="shots"></div>
-  </section>
-
-  <section>
-    <h2>The selfie talk</h2>
-    <p class="why">Phone in your hand, face to camera, jar in the shot. 30 to 60 seconds, English. Jot a word or two in each box first if it helps, then talk it through. Two takes.</p>
-    <div id="talk"></div>
-  </section>
-
-  <section>
-    <h2>Always</h2>
-    <ul class="rules">
-      <li>Open with the day number. That is the hook.</li>
-      <li>Every episode stands alone. Never say "yesterday" or "last episode", someone is meeting this jar for the first time.</li>
-      <li>Something looks wrong? Film it before you fix it. The scary days are the best episodes.</li>
-      <li>Show it, then say it: if you talk about bubbles, the camera is already on the bubbles.</li>
-      <li>Delicious first. No gut health or probiotics on camera.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>Done</h2>
-    <div id="done"></div>
-    <div class="progress"><i id="bar"></i></div>
-  </section>
+  <div id="sections"></div>
+  <div class="progress"><i id="bar"></i></div>
 
   <section>
     <h2>Sent so far</h2>
@@ -161,38 +145,9 @@ const JARS = [
   { id: "other", name: "Other jar", note: "name it below", start: "", unit: "day", see: "" }
 ];
 
-const SETUP = [
-  ["Jar on its tape mark", "Same spot on the counter as day 1."],
-  ["Phone on its tape mark", "Same tripod spot, same height, same angle."],
-  ["Same window light", "About the same time of day as day 1. Big light off if it wasn't on."],
-  ["Label updated", "New day number and the date on the tape, in Sharpie."],
-  ["Phone ready", "Lens wiped, vertical, do not disturb on, room quiet."]
-];
-
-const SHOTS = [
-  ["The jar, untouched", "10 seconds in the locked frame, nobody touching it. The before.", ""],
-  ["Close-up: what you see", "Get in close and hold 5 seconds on the thing you're going to talk about.", "see"],
-  ["The action, start to end", "Open the lid, smell, stir, feed, discard, press down, burp. With its sound.", ""],
-  ["The number", "Anything measurable on camera: the scale, the thermometer, the band. Skip if there is none today.", ""],
-  ["Lid back on", "The jar back on its mark in the locked frame. The after.", ""],
-  ["The selfie talk", "Below. Two takes.", ""]
-];
-
-const TALK = [
-  ["intro", "\"This is day {day} of {jar}.\"", "Say it first, every time.", false],
-  ["see", "What I see", "Describe it like the viewer can't see the screen.", true],
-  ["wrong", "What can go wrong right now", "What would make you worry at this stage, and what it would look like.", true],
-  ["notice", "What I'm watching for", "Smell, sound, texture, speed. The thing only someone with experience notices.", true],
-  ["action", "What I'm doing today, and why", "The one action, in one sentence.", true],
-  ["next", "What's next", "When you check it again, and what should have changed by then.", true],
-  ["follow", "\"Follow so you can see how this jar turns out.\"", "Or your own words. Don't promise a date you might miss.", false],
-  ["app", "\"Want to start your own jar? My app, the Fermentulator, is free. Link in bio.\"", "Optional. Say it when today's jar shows why tracking a jar helps.", false]
-];
-
-const DONE = [
-  ["Watched the takes back once", "Sound clear, jar in focus, face in the light."],
-  ["Clips sent to Sharon", "All the clips from today, the way you always send footage."]
-];
+let DATA = null;
+const local = ["localhost", "127.0.0.1"].includes(location.hostname);
+let editing = false;
 
 const KEY = "ferment-checkin-v1";
 let store = {};
@@ -224,29 +179,49 @@ function currentDay() {
 function entryKey() { return jar().id + "|" + currentDay(); }
 function entry() { return store.entries[entryKey()] || (store.entries[entryKey()] = { checks: {}, notes: {} }); }
 
-function checkRow(id, title, desc, hint) {
-  const e = entry(), on = e.checks[id] ? "checked" : "";
-  return `<label class="check"><input type="checkbox" data-c="${id}" ${on}><div><span class="t">${esc(title)}</span><span class="d">${esc(desc)}</span>${hint ? `<span class="hint"><b>Today, look for:</b> ${esc(hint)}</span>` : ""}</div></label>`;
+const fill = (t, j, day) => t.replace("{day}", day).replace("{jar}", j.say || j.name);
+const countable = () => DATA.sections.filter(s => s.kind !== "rules").reduce((n, s) => n + s.lines.length, 0);
+
+function checkRow(L, hint) {
+  const on = entry().checks[L.id] ? "checked" : "";
+  return `<label class="check"><input type="checkbox" data-c="${L.id}" ${on}><div><span class="t">${esc(L.t)}</span><span class="d">${esc(L.d || "")}</span>${hint ? `<span class="hint"><b>Today, look for:</b> ${esc(hint)}</span>` : ""}</div></label>`;
+}
+
+function viewSection(sec, j, day) {
+  const e = entry();
+  let body = "";
+  if (sec.kind === "rules") body = `<ul class="rules">${sec.lines.map(L => `<li>${esc(L.t)}</li>`).join("")}</ul>`;
+  else if (sec.kind === "talk") body = sec.lines.map(L => {
+    const on = e.checks[L.id] ? "checked" : "";
+    return `<div class="say"><label class="check" style="border:0;padding:0"><input type="checkbox" data-c="${L.id}" ${on}><div><div class="line">${esc(fill(L.t, j, day))}</div><span class="d">${esc(L.d || "")}</span></div></label>${L.box ? `<textarea data-n="${L.id}" placeholder="A few words...">${esc(e.notes[L.id] || "")}</textarea>` : ""}</div>`;
+  }).join("");
+  else body = sec.lines.map(L => checkRow(L, L.hint ? j.see : "")).join("");
+  return `<section><h2>${esc(sec.title)}</h2>${sec.why ? `<p class="why">${esc(sec.why)}</p>` : ""}${body}</section>`;
+}
+
+function editSection(sec, si) {
+  const rows = sec.lines.map((L, li) => `<div class="ed">
+      <input type="text" class="t-in" data-s="${si}" data-l="${li}" data-f="t" value="${esc(L.t)}" placeholder="The line">
+      <div class="tools"><button data-mv="${si},${li},-1" title="Move up">↑</button><button data-mv="${si},${li},1" title="Move down">↓</button><button class="del" data-del="${si},${li}" title="Delete">✕</button></div>
+      ${sec.kind === "rules" ? "" : `<textarea data-s="${si}" data-l="${li}" data-f="d" placeholder="Small text under it (optional)">${esc(L.d || "")}</textarea>`}
+      ${sec.kind === "talk" ? `<label class="boxopt"><input type="checkbox" data-s="${si}" data-l="${li}" data-f="box" ${L.box ? "checked" : ""}> Note box for Shalom</label>` : ""}
+    </div>`).join("");
+  return `<section><div class="edhead"><input data-s="${si}" data-f="title" value="${esc(sec.title)}"><textarea data-s="${si}" data-f="why" placeholder="Intro under the heading (optional)">${esc(sec.why || "")}</textarea></div>${rows}<button class="add" data-add="${si}">+ Add line</button></section>`;
 }
 
 function render() {
-  const j = jar(), day = currentDay(), e = entry();
+  if (!DATA) return;
+  const j = jar(), day = currentDay();
   $("jars").innerHTML = JARS.map(x => `<button aria-pressed="${x.id === store.jar}" data-j="${x.id}"><b>${esc(x.name)}</b><span>${esc(x.note)}</span></button>`).join("");
   $("other").classList.toggle("on", j.id === "other");
   $("otherName").value = store.other.name; $("otherStart").value = store.other.start;
-
   $("dayLabel").textContent = "Day " + day;
   const week = j.unit === "week" ? ` · week ${Math.floor((day - 1) / 7) + 1}` : "";
   $("dayMeta").innerHTML = (j.start ? `Day 1 was ${esc(j.start)}${week}. ` : "Set the Day 1 date above. ") + "Wrong number? Use the − and +.";
 
-  $("setup").innerHTML = SETUP.map((s, i) => checkRow("s" + i, s[0], s[1])).join("");
-  $("shots").innerHTML = SHOTS.map((s, i) => checkRow("h" + i, s[0], s[1], s[2] === "see" ? j.see : "")).join("");
-  $("talk").innerHTML = TALK.map(([id, line, desc, box]) => {
-    const said = e.checks["t_" + id] ? "checked" : "";
-    const txt = line.replace("{day}", day).replace("{jar}", j.say);
-    return `<div class="say"><label class="check" style="border:0;padding:0"><input type="checkbox" data-c="t_${id}" ${said}><div><div class="line">${esc(txt)}</div><span class="d">${esc(desc)}</span></div></label>${box ? `<textarea data-n="${id}" placeholder="A few words...">${esc(e.notes[id] || "")}</textarea>` : ""}</div>`;
-  }).join("");
-  $("done").innerHTML = DONE.map((s, i) => checkRow("d" + i, s[0], s[1])).join("");
+  $("sections").innerHTML = DATA.sections.map((sec, si) => editing ? editSection(sec, si) : viewSection(sec, j, day)).join("");
+  $("editBtn").textContent = editing ? "Back to Shalom's view" : "Edit lines";
+  $("sendBtn").textContent = editing ? "Save changes" : "Send to Sharon";
 
   const sent = store.sent.filter(s => s.jar === j.id);
   $("log").innerHTML = sent.length ? sent.slice().reverse().map(s => `<div>Day ${s.day} · sent ${esc(s.at)}</div>`).join("") : "<div>Nothing sent yet for this jar.</div>";
@@ -254,47 +229,85 @@ function render() {
 }
 
 function progress() {
-  const total = SETUP.length + SHOTS.length + TALK.length + DONE.length;
-  const done = Object.values(entry().checks).filter(Boolean).length;
+  if (editing) { $("count").innerHTML = `<span class="saved" id="savedMsg">${dirty ? "Not saved yet" : "Saved"}</span>`; return; }
+  const total = countable();
+  const ids = new Set(DATA.sections.filter(s => s.kind !== "rules").flatMap(s => s.lines.map(L => L.id)));
+  const done = Object.entries(entry().checks).filter(([k, v]) => v && ids.has(k)).length;
   $("bar").style.width = Math.round(done / total * 100) + "%";
   $("count").textContent = `${done} of ${total} ticked · Day ${currentDay()}`;
 }
 
+let dirty = false;
+const touch = () => { dirty = true; const m = $("savedMsg"); if (m) m.textContent = "Not saved yet"; };
+
 document.addEventListener("click", ev => {
   const b = ev.target.closest("[data-j]");
-  if (b) { store.jar = b.dataset.j; save(); render(); }
+  if (b) { store.jar = b.dataset.j; save(); render(); return; }
+  const mv = ev.target.closest("[data-mv]");
+  if (mv) {
+    const [si, li, d] = mv.dataset.mv.split(",").map(Number), arr = DATA.sections[si].lines, to = li + d;
+    if (to >= 0 && to < arr.length) { [arr[li], arr[to]] = [arr[to], arr[li]]; touch(); render(); }
+    return;
+  }
+  const del = ev.target.closest("[data-del]");
+  if (del) { const [si, li] = del.dataset.del.split(",").map(Number); DATA.sections[si].lines.splice(li, 1); touch(); render(); return; }
+  const add = ev.target.closest("[data-add]");
+  if (add) {
+    const sec = DATA.sections[+add.dataset.add];
+    sec.lines.push({ id: "x" + Date.now().toString(36), t: "", d: "", box: sec.kind === "talk" ? true : undefined });
+    touch(); render();
+    const ins = document.querySelectorAll(`[data-s="${add.dataset.add}"][data-f="t"]`); ins[ins.length - 1].focus();
+  }
 });
 document.addEventListener("change", ev => {
   const c = ev.target.dataset.c;
   if (c) { entry().checks[c] = ev.target.checked; save(); progress(); }
+  if (ev.target.dataset.f === "box") { DATA.sections[ev.target.dataset.s].lines[ev.target.dataset.l].box = ev.target.checked; touch(); }
 });
 document.addEventListener("input", ev => {
   const n = ev.target.dataset.n;
-  if (n) { entry().notes[n] = ev.target.value; save(); }
+  if (n) { entry().notes[n] = ev.target.value; save(); return; }
+  const f = ev.target.dataset.f;
+  if (f && f !== "box") {
+    const sec = DATA.sections[ev.target.dataset.s];
+    if (ev.target.dataset.l === undefined) sec[f] = ev.target.value; else sec.lines[ev.target.dataset.l][f] = ev.target.value;
+    touch();
+  }
 });
 $("otherName").addEventListener("change", ev => { store.other.name = ev.target.value.trim(); save(); render(); });
 $("otherStart").addEventListener("change", ev => { store.other.start = ev.target.value; delete store["day_other"]; save(); render(); });
 $("dayDown").onclick = () => { store["day_" + jar().id] = Math.max(1, currentDay() - 1); save(); render(); };
 $("dayUp").onclick = () => { store["day_" + jar().id] = currentDay() + 1; save(); render(); };
+$("editBtn").onclick = () => {
+  if (editing && dirty && !confirm("You have changes that are not saved. Leave without saving?")) return;
+  if (editing && dirty) { location.reload(); return; }
+  editing = !editing; render(); scrollTo(0, 0);
+};
+
+async function saveLines() {
+  DATA.sections.forEach(sec => sec.lines = sec.lines.filter(L => L.t.trim()));
+  const r = await fetch("/save", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(DATA, null, 2) });
+  if (!r.ok) { alert("Saving failed: " + await r.text()); return; }
+  dirty = false; render();
+}
 
 $("sendBtn").onclick = () => {
+  if (editing) { saveLines(); return; }
   const j = jar(), day = currentDay(), e = entry();
-  const tick = (id, t) => (e.checks[id] ? "✓ " : "✗ ") + t;
-  const lines = [`Day ${day} of ${j.name}`, ""];
-  lines.push("Shots:", ...SHOTS.map((s, i) => tick("h" + i, s[0])), "");
-  lines.push("Talk:");
-  TALK.forEach(([id, line, , box]) => {
-    const label = box ? line : line.replace("{day}", day).replace("{jar}", j.say);
-    lines.push(tick("t_" + id, label));
-    if (box && e.notes[id]) lines.push("   " + e.notes[id].trim());
+  const tick = L => (e.checks[L.id] ? "✓ " : "✗ ") + (L.box ? L.t : fill(L.t, j, day));
+  const lines = [`Day ${day} of ${j.name}`];
+  DATA.sections.filter(s => s.kind !== "rules").forEach(sec => {
+    lines.push("", sec.title + ":");
+    sec.lines.forEach(L => { lines.push(tick(L)); if (L.box && e.notes[L.id]) lines.push("   " + e.notes[L.id].trim()); });
   });
-  lines.push("", tick("d1", "Clips sent"));
   window.open("https://wa.me/?text=" + encodeURIComponent(lines.join("\n")), "_blank");
   store.sent.push({ jar: j.id, day, at: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short" }) });
   save(); render();
 };
 
-render();
+if (local) document.body.classList.add("local");
+fetch("checklist.json?" + Date.now()).then(r => r.json()).then(d => { DATA = d; render(); })
+  .catch(() => { $("sections").innerHTML = "<section>Could not load the checklist. Check your connection and refresh.</section>"; });
 </script>
 </body>
 </html>
