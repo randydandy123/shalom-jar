@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Shalom Autocomplete Ideas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Literata:opsz,wght@7..72,400;7..72,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; a shelf of jars (bar chart) up top, then ten labelled cards like jar labels. */
+:root {
+  --bg: #eef2ec;          /* pale brine */
+  --surface: #f8faf6;
+  --ink: #1d2b24;         /* bottle green-black */
+  --muted: #5a6b62;
+  --line: #cfd9d0;
+  --accent: #b5651d;      /* miso amber */
+  --accent-soft: #f1e2cf;
+  --bar: #4f7a62;         /* cabbage green */
+  --pill: #ffffff;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131b17; --surface: #1a241f; --ink: #e4ece6; --muted: #9db0a5; --line: #2c3a33;
+    --accent: #e09a55; --accent-soft: #3a2a1a; --bar: #7fb393; --pill: #222e28; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131b17; --surface: #1a241f; --ink: #e4ece6; --muted: #9db0a5; --line: #2c3a33;
+  --accent: #e09a55; --accent-soft: #3a2a1a; --bar: #7fb393; --pill: #222e28; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 72px; display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; font-weight: 700; }
+h3 { font-size: 1.3rem; font-weight: 700; }
+p { margin: 0; max-width: 65ch; }
+a { color: var(--accent); }
+.eyebrow { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+header { display: grid; gap: 18px; }
+.lede { font-size: 1.1rem; color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+.stat { border-top: 2px solid var(--ink); padding-top: 10px; display: grid; gap: 2px; }
+.stat b { font-family: var(--display); font-size: 1.8rem; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat span { font-size: 0.85rem; color: var(--muted); line-height: 1.35; }
+.note { background: var(--accent-soft); border-radius: 10px; padding: 18px 20px; display: grid; gap: 8px; }
+.note p { font-size: 0.97rem; }
+section { display: grid; gap: 20px; }
+.shelf { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 2rem minmax(0, 12rem) minmax(0, 1fr); gap: 12px; align-items: center; text-decoration: none; color: inherit; }
+.row:hover .name, .row:focus-visible .name { color: var(--accent); }
+.row:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+.row .n { font-family: var(--mono); color: var(--muted); font-size: 0.9rem; }
+.row .name { font-family: var(--display); font-weight: 500; font-size: 1rem; line-height: 1.25; }
+.track { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.fill { height: 14px; background: var(--bar); border-radius: 3px; flex: none; }
+.row.top .fill { background: var(--accent); }
+.val { font-family: var(--mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.legend { font-size: 0.88rem; color: var(--muted); }
+.ideas { display: grid; gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 14px; scroll-margin-top: 20px; }
+.card.top { border-color: var(--accent); }
+.card-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
+.num { font-family: var(--display); font-weight: 700; font-size: 2.2rem; line-height: 1; color: var(--accent); min-width: 2.2rem; }
+.title-block { display: grid; gap: 8px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-family: var(--mono); font-size: 0.75rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.tag.where { border-color: var(--bar); color: var(--bar); }
+.tag.count { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.searches { display: flex; flex-wrap: wrap; gap: 8px; }
+.q { font-family: var(--mono); font-size: 0.8rem; background: var(--pill); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px 5px 30px; position: relative; overflow-wrap: anywhere; }
+.q::before { content: ""; position: absolute; left: 11px; top: 50%; width: 8px; height: 8px; border: 1.5px solid var(--muted); border-radius: 50%; transform: translateY(-65%); }
+.q::after { content: ""; position: absolute; left: 19px; top: 58%; width: 5px; height: 1.5px; background: var(--muted); transform: rotate(45deg); }
+.caution { font-size: 0.93rem; border-left: 3px solid var(--accent); padding-left: 12px; color: var(--ink); }
+.small-label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+ul.plain { margin: 0; padding-left: 1.2rem; display: grid; gap: 8px; max-width: 65ch; }
+footer { font-size: 0.88rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 18px; }
+@media (max-width: 640px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .row { grid-template-columns: 1.6rem minmax(0, 1fr); }
+  .row .track { grid-column: 2; }
+  .card { padding: 18px; }
+  .num { font-size: 1.8rem; min-width: 1.8rem; }
+}
+@media (prefers-reduced-motion: no-preference) { .row { transition: color .15s; } }
+</style>
+<style>body{margin:0}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Shalom · Fermentation Club · 14 October 2026</div>
+  <h1>10 products people are already searching for</h1>
+  <p class="lede">We typed each fermentation keyword into Google and YouTube, then the keyword plus every letter a to z, and recorded everything the search bar suggested. Then we sorted it into questions, problems and wishes. Method from <a href="https://www.instagram.com/p/DdthFYgTi6U/" target="_blank" rel="noopener">this reel</a>.</p>
+  <div class="stats">
+    <div class="stat"><b>32</b><span>starting words across fermentation, lactic, drinks, sourdough and koji</span></div>
+    <div class="stat"><b>2,496</b><span>searches typed, none failed</span></div>
+    <div class="stat"><b>13,432</b><span>different phrases people type</span></div>
+    <div class="stat"><b>2,057</b><span>phrases on both Google and YouTube</span></div>
+  </div>
+</header>
+
+<div class="note">
+  <div class="small-label">How to read the numbers</div>
+  <p>The search bar shows what people type, in their own words. It does not show how many people type it. So each number below counts <strong>how many different phrases</strong> point at the same need. A need that shows up in hundreds of wordings, across all five areas, is a real and repeated one.</p>
+  <p>The Club's two bonus guides, Koji Without Fear and Sourdough Discard to Dinner, are backed by the data too. Nothing below repeats them.</p>
+</div>
+
+<section>
+  <h2>The 10 at a glance</h2>
+  <div class="shelf" id="shelf"></div>
+  <p class="legend">Bar length = number of different search phrases behind each idea. Amber = the top three to make first. Tap a row to jump to it.</p>
+</section>
+
+<section>
+  <h2>Each idea, with the real searches behind it</h2>
+  <div class="ideas" id="ideas"></div>
+</section>
+
+<section>
+  <h2>Also in the data</h2>
+  <ul class="plain">
+    <li><strong>Alcohol in homemade drinks</strong>, 122 phrases: <span class="q">kombucha alcohol content</span> <span class="q">water kefir alcohol</span> <span class="q">ginger bug alcohol</span>. Could be a one-pager, but only with sourced numbers.</li>
+    <li><strong>Removed as noise:</strong> Minecraft ("fermented spider eye", "brewing stand"), kojic acid skin soap, and home brewing alcohol from fruit, which is not his lane.</li>
+  </ul>
+</section>
+
+<footer>
+  Pulled on 14 October 2026 from Google and YouTube search suggestions, US English. Prepared by Sharon Gol for Shalom.
+</footer>
+
+</div>
+
+<script>
+const IDEAS = [
+  { name: "Kahm or Mold?", sub: "A one-page photo checklist", format: "checklist", where: "Free, in exchange for a comment, into the Club", count: 256, countLabel: "256 phrases · all 5 areas", top: true,
+    why: "The biggest fear in the data, and it crosses every area. It is the one problem that appears by itself from searches that never mentioned it: hot sauce, pickles, ginger bug, sourdough starter, tepache and lacto fermentation all bring up kahm yeast on their own. It fits the Club's promise word for word: ferment with confidence.",
+    q: ["kahm yeast on sauerkraut", "kahm yeast vs mold", "kahm yeast kombucha", "kahm yeast on sourdough starter", "ginger bug kahm yeast", "can kahm yeast make you sick", "what to do with kahm yeast"] },
+  { name: "The Brine Calculator", sub: "Type the weight, get the salt", format: "spreadsheet or web calculator", where: "A tool inside the Club", count: 409, countLabel: "249 brine + 160 ratio phrases", top: true,
+    why: "People do not ask how to brine. They ask for the exact number, one vegetable at a time. One calculator can cover vegetables, hot sauce, ginger bug and starter feeding.",
+    q: ["how to make brine for fermenting vegetables", "brine percentage for lacto fermentation", "fermented hot sauce salt ratio", "brine for fermenting jalapenos", "best sourdough starter feeding ratio", "ginger bug ratio", "amazake ratio"] },
+  { name: "Don't Pour It Out", sub: "What to do with every leftover, and how to rescue a ferment that went too far", format: "ebook", where: "Club bonus, or sold on its own", count: 206, countLabel: "182 “what to do with” + 24 rescue", top: true,
+    why: "The surprise, and Shalom's brand exactly: waste is the beginning. People are holding brine, juice, extra grains and over-fermented jars and asking what to do with them. Nobody in fermentation owns the by-product. He can.",
+    q: ["what to do with pickle juice", "what to do with kimchi juice", "what to do with fermentation brine", "what to do with extra water kefir grains", "what to do with kombucha pellicle", "what to do with beets after kvass", "what to do with over fermented kimchi", "what to do with kombucha that is too vinegary", "sauerkraut too salty"] },
+  { name: "Is It Ready?", sub: "A ferment tracker", format: "tracker spreadsheet", where: "A tool inside the Club", count: 454, countLabel: "454 phrases · all 5 areas",
+    why: "“How long” and “when is it ready” is the most common question after equipment. Each jar gets a start date, a salt percentage and a check-by date.",
+    q: ["how long to ferment pickles", "how long to ferment sauerkraut", "lacto fermentation timeline", "how to know when milk kefir is ready", "sourdough starter feeding schedule", "how long does shio koji last in the fridge"] },
+  { name: "Is This Normal?", sub: "Smell, bubbles, liquid on top", format: "troubleshooting flowchart", where: "Club bonus", count: 145, countLabel: "145 phrases · all 5 areas",
+    why: "One flowchart per area: what it should smell like, why it isn't bubbling, what the liquid on top means. Pairs with Kahm or Mold.",
+    q: ["why does my sourdough starter smell like acetone", "why does my ferment smell like acetone", "water kefir not fizzy", "why is my ginger bug not bubbling", "why is my kombucha not fizzy", "sourdough starter liquid on top", "is my ginger bug dead"] },
+  { name: "A Mason Jar Is Enough", sub: "What you need and what you don't", format: "equipment guide + shopping list", where: "Free, with affiliate links", count: 577, countLabel: "577 phrases · all 5 areas",
+    why: "The largest cluster by far, and it is buying intent. It also backs the Club's line “no special equipment”.",
+    q: ["fermentation jar", "can you use mason jars for fermentation", "fermentation jar with airlock", "can you ferment in plastic jars", "can you ferment pickles in stainless steel", "sourdough starter kit", "kombucha starter kit"] },
+  { name: "Can I Ferment It?", sub: "An A to Z ingredient chart", format: "chart", where: "Free or inside the Club", count: 45, countLabel: "45 phrases",
+    why: "Fits the whole-ingredient angle: start from what is already in the fridge.",
+    q: ["can you ferment onions", "can you ferment tomatoes", "can you ferment potatoes", "can you ferment apples", "can you ferment mushrooms", "can you ferment meat", "can you ferment without salt", "what can i ferment"] },
+  { name: "How Much Should I Eat?", sub: "A daily serving guide", format: "short guide", where: "Inside the Club", count: 57, countLabel: "57 phrases",
+    why: "The top three fermentation questions in the whole crawl are all about gut health.",
+    caution: "Careful: no medical condition named, no promised result, research-backed numbers only, and “I'm a cook, not a doctor” in the same breath.",
+    q: ["is fermented food good for gut health", "how much fermented food for gut health", "how to make fermented food for gut health", "how much sauerkraut per day", "how much kimchi to eat daily", "how much fermented food is too much"] },
+  { name: "Going Away", sub: "How to pause every culture", format: "checklist", where: "Free", count: 37, countLabel: "37 phrases",
+    why: "Small, specific, and nobody makes it. This is what the reel means by low competition.",
+    q: ["what to do with sourdough starter when you go on vacation", "what to do with water kefir grains while on vacation", "what to do with kombucha when on vacation", "what to do with milk kefir grains while on vacation"] },
+  { name: "Koji, Now What?", sub: "Using shio koji, koji rice and amazake", format: "recipe cards", where: "Inside the Club", count: 236, countLabel: "236 use, recipe and “what is” phrases",
+    why: "In koji, people ask how to use it far more than how to make it. “How to use amazake” is the top koji question.",
+    caution: "Check first: if Koji Without Fear already covers using it, skip this one.",
+    q: ["how to use amazake", "what is koji rice", "what is shio koji", "how to use koji rice", "how to use shio koji", "what to do with miso", "koji dry aged steak"] }
+];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const max = Math.max(...IDEAS.map(i => i.count));
+
+document.getElementById("shelf").innerHTML = IDEAS.map((i, k) => `
+  <a class="row${i.top ? " top" : ""}" href="#idea${k + 1}">
+    <span class="n">${k + 1}</span>
+    <span class="name">${esc(i.name)}</span>
+    <span class="track"><span class="fill" style="width:calc((100% - 3.5rem) * ${(i.count / max).toFixed(3)})"></span><span class="val">${i.count}</span></span>
+  </a>`).join("");
+
+document.getElementById("ideas").innerHTML = IDEAS.map((i, k) => `
+  <article class="card${i.top ? " top" : ""}" id="idea${k + 1}">
+    <div class="card-head">
+      <div class="num">${k + 1}</div>
+      <div class="title-block">
+        <h3>${esc(i.name)}</h3>
+        <p style="color:var(--muted)">${esc(i.sub)}</p>
+        <div class="tags">
+          <span class="tag count">${esc(i.countLabel)}</span>
+          <span class="tag">${esc(i.format)}</span>
+          <span class="tag where">${esc(i.where)}</span>
+        </div>
+      </div>
+    </div>
+    <p>${esc(i.why)}</p>
+    ${i.caution ? `<p class="caution">${esc(i.caution)}</p>` : ""}
+    <div class="small-label">What people type</div>
+    <div class="searches">${i.q.map(q => `<span class="q">${esc(q)}</span>`).join("")}</div>
+  </article>`).join("");
+</script>
+
+</body>
+</html>
