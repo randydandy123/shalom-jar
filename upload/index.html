@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Shalom Upload Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600&family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF7; --ink:#111111; --steel:#C9CCCE; --surface:#FFFFFF; --muted:#5b5f62;
+    --tape:#4A8CC2; --tape-ink:#06192A; --brine:#D6E6F3; --basil:#3F8A5C; --basil-soft:#EEF5F0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink)}
+  body{font:16px/1.5 "DM Sans",system-ui,sans-serif;padding:24px 16px 64px}
+  .wrap{max-width:720px;margin:0 auto}
+  h1,h2{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em;margin:0}
+  h1{font-size:44px;line-height:1.02}
+  h2{font-size:28px;line-height:1.05}
+  .tape{display:inline-block;background:var(--tape);color:var(--tape-ink);font-family:Caveat,cursive;font-weight:600;
+        font-size:24px;line-height:1.1;padding:4px 14px 6px;transform:rotate(-1.5deg);margin:12px 0 4px}
+  .mono{font-family:"Space Mono",ui-monospace,monospace}
+  .intro{margin:18px 0 8px;color:var(--muted)}
+  .steps{list-style:none;padding:0;margin:20px 0 28px;border-top:1px dashed var(--steel)}
+  .steps li{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed var(--steel)}
+  .steps .n{font-family:"Space Mono",monospace;font-weight:700;min-width:26px}
+  .plan{width:100%;border-collapse:collapse;margin:8px 0 32px;background:var(--surface);border:1px solid var(--steel)}
+  .plan td{padding:10px 12px;border-bottom:1px dashed var(--steel);vertical-align:top}
+  .plan tr:last-child td{border-bottom:0}
+  .plan td:first-child{font-family:"Space Mono",monospace;font-weight:700;width:34px}
+  .plan .when{font-family:"Space Mono",monospace;font-size:13px;white-space:nowrap}
+  .card{background:var(--surface);border:1px solid var(--steel);margin:0 0 28px;padding:20px}
+  .card.done{background:var(--basil-soft);border-color:var(--basil)}
+  .head{display:flex;gap:14px;align-items:baseline}
+  .big{font-family:Anton,Impact,sans-serif;font-size:48px;line-height:.9}
+  .kind{font-family:"Space Mono",monospace;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .when-box{margin:14px 0;padding:12px 14px;background:var(--brine);font-family:"Space Mono",monospace;font-size:15px}
+  .when-box b{font-size:17px}
+  .grid{display:grid;grid-template-columns:150px 1fr;gap:18px;margin-top:14px}
+  .grid img{width:100%;display:block;border:1px solid var(--steel)}
+  .label{font-family:"Space Mono",monospace;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 6px}
+  .label:first-child{margin-top:0}
+  a.btn,button.btn{display:block;width:100%;text-align:left;font:600 15px/1.3 "DM Sans",sans-serif;color:var(--ink);
+        background:var(--paper);border:1px solid var(--ink);padding:10px 12px;margin:0 0 8px;text-decoration:none;cursor:pointer}
+  a.btn:hover,button.btn:hover{background:var(--brine)}
+  a.btn small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+  .cap{white-space:pre-wrap;background:var(--paper);border:1px dashed var(--steel);padding:12px;font-size:15px;margin:0 0 8px;
+       max-height:260px;overflow:auto}
+  button.copy{background:var(--tape);color:var(--tape-ink);border-color:var(--tape);text-align:center}
+  button.copy.ok{background:var(--basil);border-color:var(--basil);color:#fff}
+  .facts{margin:6px 0 0;padding:0;list-style:none}
+  .facts li{padding:6px 0;border-bottom:1px dashed var(--steel)}
+  .facts li:last-child{border-bottom:0}
+  .note{font-size:14px;color:var(--muted);margin:10px 0 0}
+  label.tick{display:flex;gap:10px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--steel);font-weight:600;cursor:pointer}
+  label.tick input{width:22px;height:22px;accent-color:var(--basil)}
+  footer{color:var(--muted);font-size:13px;margin-top:36px}
+  @media (max-width:520px){
+    h1{font-size:36px}
+    .grid{grid-template-columns:1fr}
+    .grid img{max-width:220px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Shalom upload sheet</h1>
+  <div class="tape">2 reels + 2 carousels</div>
+  <p class="intro">For Gali. Four posts for <b>@shalom_elbert</b>, each scheduled in the Instagram app. Do them in any order, the time on each card is what matters.</p>
+
+  <ol class="steps">
+    <li><span class="n">1.</span><span>Open the card's links and save the files to your phone (video or slides, plus the cover).</span></li>
+    <li><span class="n">2.</span><span>In Instagram, logged in as <b>@shalom_elbert</b>, tap <b>+</b> and pick the files. Carousel slides go in number order, 01 first.</span></li>
+    <li><span class="n">3.</span><span>Tap <b>Copy caption</b> on the card and paste it. Tap <b>Add location</b> and choose <b>New York, New York</b>.</span></li>
+    <li><span class="n">4.</span><span>Reels only: tap <b>Edit cover</b>, then <b>Add from camera roll</b>, and pick the cover you saved.</span></li>
+    <li><span class="n">5.</span><span>Tap <b>More options</b> (Advanced settings), turn on <b>Schedule this post</b>, set the date and time from the card, then <b>Schedule</b>.</span></li>
+    <li><span class="n">6.</span><span>Tick the box at the bottom of the card.</span></li>
+  </ol>
+
+  <table class="plan">
+    <tr><td>1.</td><td>How to make a brine <span class="kind">reel</span></td><td class="when">Wed 11 Nov</td></tr>
+    <tr><td>2.</td><td>Why I named my dog Koji <span class="kind">carousel</span></td><td class="when">Fri 13 Nov</td></tr>
+    <tr><td>3.</td><td>How to brown ground beef <span class="kind">reel</span></td><td class="when">Mon 16 Nov</td></tr>
+    <tr><td>4.</td><td>The Fermentulator <span class="kind">carousel</span></td><td class="when">Wed 18 Nov</td></tr>
+  </table>
+  <p class="note" style="margin-top:-20px;margin-bottom:28px">All four go out at <b class="mono">19:30 Israel time</b>, which is <b class="mono">12:30 New York time</b>. Instagram uses your phone's clock, so pick the one your phone is set to.</p>
+
+  <div id="cards"></div>
+
+  <footer>Made for Shalom Simcha Elbert's account by Sharon Gol. If a Drive link asks for access, tell Sharon.</footer>
+</div>
+
+<script>
+const POSTS = [
+  {
+    id: "brine", kind: "Reel · 66 seconds", title: "How to make a brine",
+    day: "Wednesday 11 November", thumb: "img/brine.jpg",
+    links: [
+      {t: "Video", s: "how to brine v2.mp4", u: "https://drive.google.com/file/d/1r9VB5W8oaALBMvgBlHG1so_TxqqcEjXG/view"},
+      {t: "Cover", s: "how to brine v2 - COVER.jpg", u: "https://drive.google.com/file/d/1DG93aR3GwCXn6_qHCkVp7SYK7alhY2NW/view"}
+    ],
+    caption: `Weigh the veg and the water together, then add a % of that weight in salt. Dill pickles 3 to 4%, carrots about 2%.
+
+Comment APP and I'll send you the Fermentulator. It works out the salt for you.
+
+#Brine #FermentedVegetables #LactoFermentation #Fermentation #HomeCooking`,
+    facts: ["Location: New York, New York.", "Tags: none.", "Cover: the brine cover above (Edit cover, Add from camera roll)."]
+  },
+  {
+    id: "kojidog", kind: "Carousel · 15 slides, photos and videos", title: "Why I named my dog Koji",
+    day: "Friday 13 November", thumb: "img/koji-dog.jpg",
+    links: [
+      {t: "Slides folder", s: "Koji dog carousel: 01 to 15", u: "https://drive.google.com/drive/folders/1t3mJ9lLcg8jO0ndT_vQqe424sxgSUO2S"},
+      {t: "Cover (slide 01)", s: "01.png, the store bought koji bag", u: "https://drive.google.com/file/d/1bVcW7ay6xz_nw5ZYDWCAzbzEBcM63YF4/view"}
+    ],
+    caption: `I named my dog after a mold. Here's why.
+
+Koji the mold taught me that everyday things can become extraordinary, and that what most people throw away is where the flavor starts.
+
+Koji the dog taught me the same thing, one walk in the park at a time. Patience. Play. A lot of love.
+
+This is why I ferment. What's your reason? Tell me in the comments.
+
+#koji #fermentation #homefermentation #dogsofinstagram #kojimold`,
+    facts: ["Location: New York, New York.", "Tags: none.", "Upload all 15 files in order, 01.png to 15.mp4. Most are short videos, that is right.", "Skip the two folders inside, \"canva media\" and \"old versions\".", "The cover is slide 01, so nothing extra to set."]
+  },
+  {
+    id: "beef", kind: "Reel · 56 seconds", title: "How to brown ground beef",
+    day: "Monday 16 November", thumb: "img/beef.jpg",
+    links: [
+      {t: "Video", s: "ground beef three ways v3.mp4 (not the \"hook 2\" file)", u: "https://drive.google.com/file/d/1xPJlBi6-qntY-9seHA-sGv1cKLVyLSLY/view"},
+      {t: "Cover", s: "ground beef three ways v3 - COVER.jpg", u: "https://drive.google.com/file/d/1NNUCpFrZTAnWZQDYFCFUBdgVJE_EnGKq/view"}
+    ],
+    caption: `Chef Andy (@andyhearnden) and Chef Fatty (@itscheffatty) taught me to stop boiling my ground beef. Small pieces, hot pan, leave it alone.
+
+Two spoons of shio koji take it one step further. The enzymes turn protein into amino acids and rice into sugar, so it browns faster, darker, and stays juicy.
+
+Watch the heat. The sugar burns fast.
+
+#GroundBeef #ShioKoji #Koji #Fermentation #HomeCooking`,
+    facts: ["Location: New York, New York.", "Tags: the two chefs are already in the caption. No collab invite.", "Cover: the ground beef cover above (Edit cover, Add from camera roll)."]
+  },
+  {
+    id: "fermentulator", kind: "Carousel · 16 slides", title: "The Fermentulator",
+    day: "Wednesday 18 November", thumb: "img/fermentulator.jpg",
+    links: [
+      {t: "Slides folder", s: "Fermentulator launch carousel: 01 to 16", u: "https://drive.google.com/drive/folders/1fxhrUsDNN-H_e3s6bfj2_nQOMMQ3fBrr"},
+      {t: "Cover (slide 01)", s: "01.png, \"Is it supposed to smell like this?\"", u: "https://drive.google.com/file/d/1k4YozPbTZpr8ysbDsgs_np5LtnCPfh0B/view"}
+    ],
+    caption: `I wished this existed for years. So I built it.
+
+And honestly, the hardest part of fermenting was never the recipe. It was standing over a jar at night, wondering if it's okay. Is that mold?
+
+Here's the quick test. A flat, smooth, white or cream film on top is usually kahm yeast, not mold. Fuzzy, raised spots in white, green, blue, black or pink are mold, and that batch goes in the bin. Smell depends on the ferment, which is why every jar in the app gets its own smell check day.
+
+The Fermentulator is what I wished I had standing over those jars. A shelf in my pocket that remembers every jar. Every jar gets a label, a plan and a daily check, with the exact grams of salt, so you stop guessing and start creating.
+
+It's free. Comment "app" and I'll send you the link to start your first jar.
+
+Want to learn this together? Comment the word "club" to get the link to my Fermentation Club. The first 7 days are totally free, and you can cancel at any time.
+
+#fermentation #fermentedfoods #homefermentation #fermentationapp #zerowastecooking`,
+    facts: ["Location: New York, New York.", "Tags: none.", "Upload all 16 slides in order, 01.png to 16.png.", "The cover is slide 01, so nothing extra to set."]
+  }
+];
+
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+
+document.getElementById("cards").innerHTML = POSTS.map((p, i) => `
+  <section class="card" id="c-${p.id}">
+    <div class="head"><span class="big">${i+1}.</span><div><h2>${esc(p.title)}</h2><div class="kind">${esc(p.kind)}</div></div></div>
+    <div class="when-box"><b>${esc(p.day)}</b><br>19:30 Israel time · 12:30 New York time</div>
+    <div class="grid">
+      <div><img src="${p.thumb}" alt="Cover of ${esc(p.title)}"></div>
+      <div>
+        <div class="label">Download</div>
+        ${p.links.map(l => `<a class="btn" href="${l.u}" target="_blank" rel="noopener">${esc(l.t)}<small>${esc(l.s)}</small></a>`).join("")}
+        <div class="label">Caption</div>
+        <div class="cap" id="cap-${p.id}">${esc(p.caption)}</div>
+        <button class="btn copy" data-id="${p.id}">Copy caption</button>
+        <ul class="facts">${p.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+      </div>
+    </div>
+    <label class="tick"><input type="checkbox" data-id="${p.id}"> Uploaded and scheduled</label>
+  </section>`).join("");
+
+function copyText(text, btn){
+  const done = () => { btn.textContent = "Copied"; btn.classList.add("ok"); setTimeout(() => { btn.textContent = "Copy caption"; btn.classList.remove("ok"); }, 1800); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(done, () => fallback());
+  } else fallback();
+  function fallback(){
+    const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly",""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+    try { document.execCommand("copy"); done(); } catch(e) { btn.textContent = "Press and hold the caption to copy"; }
+    document.body.removeChild(ta);
+  }
+}
+document.querySelectorAll("button.copy").forEach(b => b.addEventListener("click", () => {
+  copyText(POSTS.find(p => p.id === b.dataset.id).caption, b);
+}));
+document.querySelectorAll("label.tick input").forEach(cb => {
+  const key = "shalom-upload-" + cb.dataset.id, card = document.getElementById("c-" + cb.dataset.id);
+  cb.checked = store.get(key) === "1"; card.classList.toggle("done", cb.checked);
+  cb.addEventListener("change", () => { store.set(key, cb.checked ? "1" : "0"); card.classList.toggle("done", cb.checked); });
+});
+</script>
+</body>
+</html>
