@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hanukkah Shoot Day</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600&family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap">
+<style>body{margin:0}
+/* Layout: one paper column, a strip of blue tape on top, dish cards stacked, then the buy list by aisle. Shalom's Fermentulator look: paper, ink, steel, one strip of tape. */
+:root{
+  --bg:#FAFAF7; --fg:#111111; --line:#C9CCCE; --surface:#FFFFFF; --muted:#5b5f62;
+  --accent:#4A8CC2; --accent-ink:#06192A; --soft:#D6E6F3; --warn:#B4532A;
+  --font-head:Anton,Impact,"Arial Narrow",sans-serif; --font-body:"DM Sans",system-ui,sans-serif;
+  --font-mono:"Space Mono",ui-monospace,monospace; --font-tape:Caveat,"Comic Sans MS",cursive;
+  color-scheme:light;
+}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--font-body)}
+#bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;
+  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  background:var(--accent-ink);color:var(--soft);font:500 14px/1.3 var(--font-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--accent-ink)}
+#bar .hint{flex:1 1 220px;min-width:0}
+#state{font:400 12px/1 var(--font-mono)}
+#state.dirty{color:#ffb38f}
+#bar a{color:var(--soft)}
+#bar button{font:700 14px/1 var(--font-body);padding:10px 16px;border:1px solid var(--soft);cursor:pointer;background:transparent;color:var(--soft)}
+#bar #save{background:var(--soft);color:var(--accent-ink)}
+#bar button:disabled{opacity:.4;cursor:default}
+#bar button:focus-visible,.add:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding-block:36px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tape{display:inline-block;background:var(--accent);color:#fff;font:600 26px/1 var(--font-tape);padding:6px 18px 8px;transform:rotate(-1.5deg)}
+h1{font:400 clamp(44px,11vw,76px)/.95 var(--font-head);text-transform:uppercase;letter-spacing:.01em;margin:18px 0 10px;text-wrap:balance}
+.lede{font-size:18px;color:var(--muted);max-width:60ch;margin:0 0 8px}
+h2{font:400 30px/1 var(--font-head);text-transform:uppercase;letter-spacing:.02em;margin:48px 0 14px;padding-bottom:8px;border-bottom:3px solid var(--fg)}
+.dishes{display:grid;gap:14px}
+.dish{background:var(--surface);border:1px solid var(--line);padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:4px 14px}
+.num{font:700 15px/1.9 var(--font-mono);color:var(--accent)}
+.dish>div{min-width:0}
+.dish h3{font:700 20px/1.25 var(--font-body);margin:0}
+.dish .note{color:var(--muted);margin:4px 0 10px}
+.label{font:700 11px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
+ul{margin:0;padding:0;list-style:none}
+.dish li{display:inline-block;background:var(--soft);color:var(--accent-ink);padding:3px 9px;margin:0 6px 6px 0;font-size:14px}
+.aisles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.aisle{background:var(--surface);border:1px solid var(--line);padding:14px 18px}
+.aisle h3{font:700 11px/1 var(--font-mono);text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px;color:var(--accent)}
+.aisle li{padding:6px 0;border-top:1px dashed var(--line)}
+.aisle li:first-child{border-top:0}
+.prep{margin-top:40px;border:2px solid var(--fg);padding:14px 18px;background:var(--surface)}
+.prep .label{color:var(--warn)}
+.prep p{margin:0}
+.add{display:none;font:700 12px/1 var(--font-mono);background:none;border:1px dashed var(--line);color:var(--muted);padding:6px 10px;cursor:pointer;margin-top:4px}
+.editing .add{display:inline-block}
+.editing [contenteditable]{outline:none;cursor:text}
+.editing [contenteditable]:hover{box-shadow:0 0 0 1px var(--accent)}
+.editing [contenteditable]:focus{box-shadow:0 0 0 2px var(--accent);background:#fff}
+.editing [contenteditable]:empty::before{content:"type here";color:var(--line)}
+.foot{margin-top:48px;font:400 12px/1.5 var(--font-mono);color:var(--muted)}
+
+.how{background:var(--soft);color:var(--accent-ink);padding:12px 16px;margin:18px 0 0;font-size:15px}
+#bar #reset{border-color:transparent;text-decoration:underline;padding-inline:4px}
+</style></head><body>
+<div id="bar"><span class="hint">Tap any line to change it. Clear a line to remove it. Your changes stay on this phone.</span><span id="state">Sharon's list</span><button id="reset" type="button" hidden>Undo my changes</button><button id="send" type="button">Send to Sharon</button></div>
+<div class="wrap editing" id="app"></div>
+<script type="application/json" id="data">{"tape": "Hanukkah shoot", "title": "8 dishes we're shooting", "lede": "This isn't the shot list yet. It's what we want to shoot, so you can plan the shopping. Amounts are yours, you know the batches.", "prep": "The potatoes for #1 need to go in the brine a few days before the shoot, so they're ready to grate on the day.", "dishes": [{"name": "Fermented latkes with applesauce", "note": "Lacto-fermented grated potato, fried crisp, with applesauce on the side.", "buy": ["Potatoes", "Onions", "Eggs", "Flour or matzo meal", "Applesauce", "Lemon", "Frying oil"]}, {"name": "Eshel sufganiyot", "note": "Sufganiyot with eshel (Israeli buttermilk) in the dough.", "buy": ["Eshel or buttermilk", "Bread flour", "Dry yeast", "Eggs", "Sugar", "Butter", "Cinnamon", "Powdered sugar", "Frying oil"]}, {"name": "Latkes", "note": "The classic version.", "buy": ["Potatoes", "Onions", "Eggs", "Flour", "Sour cream", "Frying oil"]}, {"name": "Smashburgers", "note": "Smashed thin on a very hot flat top.", "buy": ["Ground beef 80/20", "American cheese slices", "Onions", "Pickles from your jars", "Mustard, ketchup, mayo"]}, {"name": "Sloppy joe taco latke", "note": "A latke as the taco shell, filled with sloppy joe.", "buy": ["Latke ingredients (see #3)", "Ragu", "Cilantro", "Sour cream", "Cheddar"]}, {"name": "Tater tot spice bag", "note": "Hot tots shaken in a brown paper bag with togarashi and furikake.", "buy": ["Frozen tater tots (or potatoes to make them)", "Shichimi togarashi", "Furikake", "Scallions", "Brown paper bags"]}, {"name": "Cinnamon sugar mini sufganiyot with icing", "note": "Small ones, rolled in cinnamon sugar, icing on top.", "buy": ["Dough ingredients (see #2)", "Cinnamon", "Sugar", "Powdered sugar and milk for the icing"]}, {"name": "biniye with carbonara", "note": "Pickles in the latke mix, and a latke topped with egg and a carbonara sauce.", "buy": ["Pickles from your jars", "Eggs", "Pecorino or Parmesan", "Guanciale or beef bacon", "Black pepper"]}], "aisles": [{"name": "Produce", "items": ["Potatoes (a lot: #1, #3, #5)", "Onions", "Lemon", "Cilantro", "Scallions"]}, {"name": "Dairy and eggs", "items": ["Eggs (a lot)", "Eshel or buttermilk", "Butter", "Sour cream", "American cheese slices", "Cheddar", "Pecorino or Parmesan", "Milk"]}, {"name": "Meat", "items": ["Ground beef 80/20 (#4)", "Guanciale or beef bacon"]}, {"name": "Baking and dry", "items": ["Bread flour", "Flour or matzo meal", "Dry yeast", "Sugar", "Powdered sugar", "Cinnamon"]}, {"name": "Sauces and spices", "items": ["Applesauce", "Ragu (#5)", "Ketchup", "Mustard", "Mayo", "Shichimi togarashi", "Furikake", "Black pepper"]}, {"name": "Frozen", "items": ["Tater tots"]}, {"name": "Frying", "items": ["Frying oil, enough to deep fry the sufganiyot and pan fry three rounds of latkes", "Frying thermometer"]}, {"name": "From your jars", "items": ["Pickles", "Brine for the potatoes"]}, {"name": "Props", "items": ["Brown paper bags"]}]}</script>
+<script>
+(function(){
+  var ORIGINAL = document.getElementById('data').textContent;
+  var KEY = 'hanukkah-shoot-2026';
+  var D = JSON.parse(ORIGINAL), mine = false;
+  try { var s = localStorage.getItem(KEY); if (s) { D = JSON.parse(s); mine = true; } } catch (e) {}
+  var app = document.getElementById('app'), state = document.getElementById('state'), reset = document.getElementById('reset');
+  function el(tag, cls, text){ var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function ed(e, set){ e.setAttribute('contenteditable','true'); e.setAttribute('spellcheck','false'); e._set = set; return e; }
+  function list(arr){
+    var f = document.createDocumentFragment(), ul = el('ul');
+    arr.forEach(function(t, i){ var li = ed(el('li', null, t), function(v){ arr[i] = v; }); li._arr = arr; ul.appendChild(li); });
+    var add = el('button','add','+ add line'); add.type = 'button';
+    add.addEventListener('click', function(){ arr.push(''); render(); var t = null; app.querySelectorAll('li').forEach(function(li){ if (li._arr === arr) t = li; }); if (t) t.focus(); });
+    f.appendChild(ul); f.appendChild(add); return f;
+  }
+  function render(){
+    app.innerHTML = '';
+    app.appendChild(el('span','tape',D.tape));
+    app.appendChild(ed(el('h1',null,D.title), function(v){ D.title = v; }));
+    app.appendChild(ed(el('p','lede',D.lede), function(v){ D.lede = v; }));
+    var how = el('p','how'); how.textContent = 'Add what\'s missing, fix amounts, cross things out. When it looks right, press Send to Sharon at the top and it opens WhatsApp with the whole list.';
+    app.appendChild(how);
+    app.appendChild(el('h2',null,'The dishes'));
+    var ds = el('div','dishes');
+    D.dishes.forEach(function(d, i){
+      var c = el('article','dish'); c.appendChild(el('span','num', String(i+1).padStart(2,'0')));
+      var b = el('div');
+      b.appendChild(ed(el('h3',null,d.name), function(v){ d.name = v; }));
+      b.appendChild(ed(el('p','note',d.note), function(v){ d.note = v; }));
+      b.appendChild(el('p','label','Key ingredients')); b.appendChild(list(d.buy));
+      c.appendChild(b); ds.appendChild(c);
+    });
+    app.appendChild(ds);
+    var p = el('div','prep'); p.appendChild(el('p','label','Before the shoot'));
+    p.appendChild(ed(el('p',null,D.prep), function(v){ D.prep = v; })); app.appendChild(p);
+    app.appendChild(el('h2',null,'Buy list by aisle'));
+    var as = el('div','aisles');
+    D.aisles.forEach(function(a){ var s = el('section','aisle'); s.appendChild(el('h3',null,a.name)); s.appendChild(list(a.items)); as.appendChild(s); });
+    app.appendChild(as);
+    app.appendChild(el('p','foot','Peace Happiness · Hanukkah 2026'));
+    state.textContent = mine ? 'Your version, saved on this phone' : "Sharon's list"; reset.hidden = !mine;
+  }
+  function store(){ mine = true; try { localStorage.setItem(KEY, JSON.stringify(D)); } catch (e) {} state.textContent = 'Your version, saved on this phone'; reset.hidden = false; }
+  app.addEventListener('input', function(e){ var t = e.target.closest('[contenteditable]'); if (t && t._set) { t._set(t.textContent.replace(/\s+/g,' ').trim()); store(); } });
+  app.addEventListener('keydown', function(e){ if (e.key === 'Enter' && e.target.closest('[contenteditable]')) { e.preventDefault(); e.target.blur(); } });
+  app.addEventListener('paste', function(e){ if (!e.target.closest('[contenteditable]')) return; e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData || window.clipboardData).getData('text/plain')); });
+  reset.addEventListener('click', function(){ D = JSON.parse(ORIGINAL); mine = false; try { localStorage.removeItem(KEY); } catch (e) {} render(); });
+  document.getElementById('send').addEventListener('click', function(){
+    var L = ['*' + D.title + '*', ''];
+    D.dishes.forEach(function(d, i){ L.push((i+1) + '. *' + d.name + '*'); var b = d.buy.filter(Boolean); if (b.length) L.push('   ' + b.join(', ')); });
+    L.push('', '*Buy list*');
+    D.aisles.forEach(function(a){ var it = a.items.filter(Boolean); if (it.length) { L.push('', '_' + a.name + '_'); it.forEach(function(x){ L.push('- ' + x); }); } });
+    if (D.prep) L.push('', 'Before the shoot: ' + D.prep);
+    window.location.href = 'https://wa.me/?text=' + encodeURIComponent(L.join('\n'));
+  });
+  render();
+})();
+</script>
+</body></html>
